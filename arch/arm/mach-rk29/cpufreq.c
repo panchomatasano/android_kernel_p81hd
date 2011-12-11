@@ -300,9 +300,9 @@ static int rk29_cpufreq_do_target(struct cpufreq_policy *policy, unsigned int ta
 	freqs.new = freq->frequency;
 	freqs.cpu = 0;
 	new_vcore_uV = freq->index;
-	dprintk(DEBUG_CHANGE, "%d Hz r %d(%c) selected %d Hz (%d uV)\n",
-		target_freq, relation, relation & CPUFREQ_RELATION_H ? 'H' : 'L',
-		freq->frequency, new_vcore_uV);
+	//dprintk(DEBUG_CHANGE, "%d Hz r %d(%c) selected %d Hz (%d uV)\n",
+	//	target_freq, relation, relation & CPUFREQ_RELATION_H ? 'H' : 'L',
+	//	freq->frequency, new_vcore_uV);
 
 #ifdef CONFIG_REGULATOR
 	if (vcore && freqs.new > freqs.old && vcore_uV != new_vcore_uV) {
@@ -318,9 +318,9 @@ static int rk29_cpufreq_do_target(struct cpufreq_policy *policy, unsigned int ta
 #endif
 
 	cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
-	dprintk(DEBUG_CHANGE, "pre change\n");
+	//dprintk(DEBUG_CHANGE, "pre change\n");
 	clk_set_rate(arm_clk, freqs.new * KHZ + aclk_limit());
-	dprintk(DEBUG_CHANGE, "post change\n");
+	//dprintk(DEBUG_CHANGE, "post change\n");
 	freqs.new = clk_get_rate(arm_clk) / KHZ;
 	cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
 
@@ -335,7 +335,7 @@ static int rk29_cpufreq_do_target(struct cpufreq_policy *policy, unsigned int ta
 		}
 	}
 #endif
-	dprintk(DEBUG_CHANGE, "ok, got %d kHz\n", freqs.new);
+	//dprintk(DEBUG_CHANGE, "ok, got %d kHz\n", freqs.new);
 
 	return err;
 }

@@ -101,7 +101,7 @@ static int rt5631_write(struct snd_soc_codec *codec, unsigned int reg, unsigned 
 		printk(KERN_INFO "%s reg=0x%x, val=0x%x\n", __func__, reg, val);
 		return 0;	
 	} else {
-		printk(KERN_ERR "%s failed\n", __func__);
+		//printk(KERN_ERR "%s failed\n", __func__);
 		return -EIO;	
 	}
 }
@@ -122,7 +122,7 @@ static unsigned int rt5631_read(struct snd_soc_codec *codec, unsigned int reg)
 	   	      
     value = (data[0]<<8) | data[1];         
     
-    printk("rt5631_read reg%x=%x\n",reg,value);
+    //printk("rt5631_read reg%x=%x\n",reg,value);
        
     return value;	
 }
