@@ -98,7 +98,7 @@ static int rt5631_write(struct snd_soc_codec *codec, unsigned int reg, unsigned 
 	
 	if (codec->hw_write(codec->control_data, data, 3) == 3) {
 		rt5631_write_reg_cache(codec, reg, val);
-		printk(KERN_INFO "%s reg=0x%x, val=0x%x\n", __func__, reg, val);
+		//printk(KERN_INFO "%s reg=0x%x, val=0x%x\n", __func__, reg, val);
 		return 0;	
 	} else {
 		//printk(KERN_ERR "%s failed\n", __func__);

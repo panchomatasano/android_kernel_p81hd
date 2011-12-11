@@ -911,4 +911,4 @@ module_exit(ft5406_ts_exit);
 
 MODULE_AUTHOR("<wenfs@Focaltech-systems.com>");
 MODULE_DESCRIPTION("FocalTech ft5x0x TouchScreen driver");
-
+MODULE_LICENSE("GPL");

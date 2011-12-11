@@ -64,7 +64,7 @@
 #define CONFIG_SENSOR_IIC_ADAPTER_ID_0    1
 #define CONFIG_SENSOR_POWER_PIN_0         INVALID_GPIO
 #define CONFIG_SENSOR_RESET_PIN_0         INVALID_GPIO
-#define CONFIG_SENSOR_POWERDN_PIN_0       RK29_PIN6_PB7
+#define CONFIG_SENSOR_POWERDN_PIN_0       INVALID_GPIO //RK29_PIN6_PB7
 #define CONFIG_SENSOR_FALSH_PIN_0         INVALID_GPIO
 #define CONFIG_SENSOR_POWERACTIVE_LEVEL_0 RK29_CAM_POWERACTIVE_L
 #define CONFIG_SENSOR_RESETACTIVE_LEVEL_0 RK29_CAM_RESETACTIVE_L
@@ -490,10 +490,10 @@ static struct eeti_egalax_platform_data eeti_egalax_info = {
   .disp_on_value = TOUCH_SCREEN_DISPLAY_VALUE,
 };
 #endif
-#if defined (CONFIG_TOUCHSCREEN_FT5406)
+
 #define TOUCH_RESET_PIN RK29_PIN6_PC3
 #define TOUCH_INT_PIN	RK29_PIN0_PA2
-#define TOUCH_SHUTDOWN	RK29_PIN4_PD5
+#define TOUCH_POWER_ON	RK29_PIN5_PA3
 
 void ft5x0x_reset(void)
 {
@@ -504,13 +504,12 @@ void ft5x0x_reset(void)
 	gpio_set_value(TOUCH_RESET_PIN, GPIO_HIGH);
 }
 
-void ft5x0x_hold(void)
+int ft5x0x_wakeup(void)
 {
-	printk("%s()\n", __FUNCTION__);
 	gpio_direction_output(TOUCH_RESET_PIN, 0);
 	msleep(5);
-	gpio_set_value(TOUCH_RESET_PIN, GPIO_LOW);
-	msleep(30);
+	gpio_set_value(TOUCH_RESET_PIN, GPIO_HIGH);
+	return 0;
 }
 
 void ft5x0x_request_io(void)
@@ -535,22 +534,32 @@ int ft5x0x_init_platform_hw(void)
 	ft5x0x_request_io();
 	ft5x0x_reset();
 
-	if (gpio_request(RK29_PIN6_PD3, NULL) != 0) {
-		gpio_free(RK29_PIN6_PD3);
+	if (gpio_request(TOUCH_POWER_ON, NULL) != 0) {
+		gpio_free(TOUCH_POWER_ON);
 		printk("%s gpio_request error\n", __FUNCTION__);
 		return -EIO;
 	}
 
-	gpio_direction_output(RK29_PIN6_PD3, 0);
+	gpio_direction_output(TOUCH_POWER_ON, 1);
 	gpio_set_value(TOUCH_RESET_PIN, GPIO_HIGH);
 
 	return 0;
 }
 
+void ft5x0x_exit_platform_hw(void)
+{
+	gpio_direction_output(TOUCH_POWER_ON, 0);
+	gpio_free(TOUCH_INT_PIN);
+	gpio_free(TOUCH_RESET_PIN);
+	gpio_free(TOUCH_POWER_ON);
+}
+
 struct ft5406_platform_data ft5x0x_info = {
 	.init_platform_hw = ft5x0x_init_platform_hw,
+	.exit_platform_hw = ft5x0x_exit_platform_hw,
+	.platform_wakeup = ft5x0x_wakeup,
 };
-#endif
+
 /*MMA8452 gsensor*/
 #if defined (CONFIG_GS_MMA8452)
 #define MMA8452_INT_PIN   RK29_PIN0_PA3
@@ -929,7 +938,6 @@ static struct i2c_board_info __initdata board_i2c2_devices[] = {
 #endif
 */
 
-#if defined (CONFIG_TOUCHSCREEN_FT5406)
     {
       .type           = "ft5x0x_ts",
       .addr           = (0x70>>1),
@@ -937,7 +945,6 @@ static struct i2c_board_info __initdata board_i2c2_devices[] = {
       .irq            = RK29_PIN0_PA2,//gpio_to_irq(RK29_PIN0_PA2),
       .platform_data  = &ft5x0x_info,
     },
-#endif
 };
 #endif
 
