@@ -807,6 +807,7 @@ static int  ft5406_probe(struct i2c_client *client ,const struct i2c_device_id *
 	/***wait CTP to bootup normally***/
 	 msleep(200); 
 	 
+#if 0
 	 fts_register_read(FT5X0X_REG_FIRMID, &reg_version,1);
 	 printk("[TSP] firmware version = 0x%2x\n", reg_version);
 	 fts_register_read(FT5X0X_REG_REPORT_RATE, &reg_value,1);
@@ -834,6 +835,7 @@ static int  ft5406_probe(struct i2c_client *client ,const struct i2c_device_id *
 		  }
 		  msleep(4000);
 	  }
+#endif
 
 	//printk("client->dev.driver->name %s  ,%d \n",client->dev.driver->name,ft5x0x_ts->irq);
 	ret = request_irq(ft5x0x_ts->irq, ft5406_interrupt, IRQF_TRIGGER_FALLING, client->dev.driver->name, ft5x0x_ts);
