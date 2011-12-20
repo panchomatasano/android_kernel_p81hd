@@ -482,15 +482,15 @@ static int rk29_gpio_show(struct seq_file *s, void *v)
 		for (offset = 0; offset < NUM_GROUP; ++offset)
 		{
 			gpio = i * NUM_GROUP + offset;
-			//status = gpio_request(gpio, "gpioinfo");
+			status = gpio_request(gpio, "gpioinfo");
 		
-			//if (status == 0)
+			if (status == 0)
 			{
-			//	gpio_free(gpio);
+				gpio_free(gpio);
 				seq_printf(s, "gpio %d: is free\n", gpio);
 				seq_printf(s, "\tpull: %d\n", GPIOGetPull((struct gpio_chip*)chip, offset));
 			}
-			//else
+			else
 			{
 				seq_printf(s, "gpio %d: is requested\n", gpio);
 				seq_printf(s, "\tdirection: %d\n", GPIOGetPinDirection(chip, offset));
@@ -534,4 +534,8 @@ static void __exit gpioinfo_exit(void)
 
 module_init(gpioinfo_init)
 module_exit(gpioinfo_exit)
+
+MODULE_AUTHOR("<dayong1111@gmail.com>");
+MODULE_DESCRIPTION("gpioinfo extractor");
+MODULE_LICENSE("GPL");
 
